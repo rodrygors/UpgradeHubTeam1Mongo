@@ -1,6 +1,6 @@
 package com.pet.manager.service;
 
-import com.mongodb.MongoWriteException;
+import org.springframework.dao.DuplicateKeyException;
 import com.pet.manager.exception.DuplicatePetException;
 import com.pet.manager.exception.PetNotFound;
 import com.pet.manager.model.Pet;
@@ -25,7 +25,7 @@ public class PetService {
 
         try {
             return petRepo.save(pet);
-        } catch(MongoWriteException e){
+        } catch (DuplicateKeyException e) {
             throw new DuplicatePetException();
         }
     }
