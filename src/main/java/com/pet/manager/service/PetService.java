@@ -1,5 +1,8 @@
 package com.pet.manager.service;
 
+import com.mongodb.MongoWriteException;
+import com.pet.manager.exception.DuplicatePetException;
+import com.pet.manager.exception.PetNotFound;
 import com.pet.manager.model.Pet;
 import com.pet.manager.repository.PetRepository;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,15 @@ public class PetService {
     }
 
     public Pet addPet(Pet pet) {
-        return petRepo.save(pet);
+
+        try {
+            return petRepo.save(pet);
+        } catch(MongoWriteException e){
+            throw new DuplicatePetException();
+        }
+    }
+
+    public Pet findById(String id) {
+        return petRepo.findById(id).orElseThrow(PetNotFound::new);
     }
 }

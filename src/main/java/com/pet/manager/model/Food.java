@@ -2,7 +2,6 @@ package com.pet.manager.model;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
@@ -13,13 +12,11 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Pet {
+public class Food {
     @Id
     private String id;
     @NotBlank(message = "Name is mandatory")
-    @Indexed(unique = true)
     private String name;
-    @Indexed(unique = false)
-    private PetType type;
+    private String description;
 
 }
