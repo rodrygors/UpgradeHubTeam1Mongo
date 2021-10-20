@@ -1,7 +1,9 @@
 package com.pet.manager.controller;
 
 import com.pet.manager.controller.request.PetRequest;
+import com.pet.manager.controller.response.FeedResponse;
 import com.pet.manager.controller.response.PetResponse;
+import com.pet.manager.model.Feed;
 import com.pet.manager.model.Pet;
 import com.pet.manager.service.PetService;
 import org.springframework.validation.annotation.Validated;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -22,13 +25,23 @@ public class PetController {
     }
 
     @GetMapping("/pets/{id}")
-    public PetResponse getPets(@PathVariable(value = "id") String id) {
+    public PetResponse getPet(@PathVariable(value = "id") String id) {
         Pet pet = petServ.findById(id);
-
+        List<FeedResponse> feedResponseList = new ArrayList<>();
+        if(!pet.getFeedList().isEmpty() && pet.getFeedList() != null){
+            for (Feed feed : pet.getFeedList()) {
+                feedResponseList.add(new FeedResponse(
+                        feed.getId(),
+                        feed.getFeedTme(),
+                        feed.getFoodType()
+                ));
+            }
+        }
         return new PetResponse(
                 pet.getId(),
                 pet.getName(),
-                pet.getType()
+                pet.getType(),
+                feedResponseList
         );
     }
 
@@ -37,10 +50,21 @@ public class PetController {
         List<Pet> pets = petServ.findAll();
         List<PetResponse> petResponses = new ArrayList<>();
         for (Pet pet : pets) {
+            List<FeedResponse> feedResponseList = new ArrayList<>();
+            if(!pet.getFeedList().isEmpty() && pet.getFeedList() != null){
+                for (Feed feed : pet.getFeedList()) {
+                    feedResponseList.add(new FeedResponse(
+                            feed.getId(),
+                            feed.getFeedTme(),
+                            feed.getFoodType()
+                    ));
+                }
+            }
             petResponses.add(new PetResponse(
                     pet.getId(),
                     pet.getName(),
-                    pet.getType()
+                    pet.getType(),
+                    feedResponseList
             ));
         }
         return petResponses;
@@ -53,11 +77,12 @@ public class PetController {
                 .name(petRequest.getName())
                 .type(petRequest.getType())
                 .build());
-
+        List<FeedResponse> feedResponseList = new ArrayList<>();
         return new PetResponse(
                 pet.getId(),
                 pet.getName(),
-                pet.getType()
+                pet.getType(),
+                new ArrayList<>()
         );
     }
 

@@ -1,5 +1,6 @@
 package com.pet.manager.service;
 
+import com.pet.manager.model.Feed;
 import org.springframework.dao.DuplicateKeyException;
 import com.pet.manager.exception.DuplicatePetException;
 import com.pet.manager.exception.PetNotFound;
@@ -32,5 +33,12 @@ public class PetService {
 
     public Pet findById(String id) {
         return petRepo.findById(id).orElseThrow(PetNotFound::new);
+    }
+
+    public Pet addFeedToPet(String petId, Feed feed) {
+        Pet pet = this.findById(petId);
+        pet.getFeedList().add(feed);
+        petRepo.save(pet);
+        return pet;
     }
 }

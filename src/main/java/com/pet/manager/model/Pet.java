@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Document
 @Getter
@@ -21,5 +22,5 @@ public class Pet {
     private String name;
     @Indexed(unique = false)
     private PetType type;
-
+    private List<Feed> feedList;
 }
