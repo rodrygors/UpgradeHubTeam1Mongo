@@ -6,10 +6,7 @@ import com.pet.manager.controller.response.PetResponse;
 import com.pet.manager.model.Feed;
 import com.pet.manager.model.Pet;
 import com.pet.manager.service.PetService;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,5 +39,20 @@ public class FeedController {
                 pet.getType(),
                 feedResponseList
         );
+    }
+
+    @GetMapping(value = "/feeds/pets/{id}")
+    public List<FeedResponse> getFeedsByPedId(@PathVariable(value = "id") String id){
+        List<Feed> feedList = petService.getFeedsByPedId(id);
+        List<FeedResponse> feedResponseList = new ArrayList<>();
+
+        for(Feed feed : feedList){
+            feedResponseList.add(new FeedResponse(
+                    feed.getId(),
+                    feed.getFeedTme(),
+                    feed.getFoodType()
+            ));
+        }
+        return feedResponseList;
     }
 }
