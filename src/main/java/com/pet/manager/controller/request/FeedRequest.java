@@ -7,12 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class FeedRequest {
-    private LocalDateTime feedTime;
+    private LocalTime feedTime;
     private FoodType foodType;
 }

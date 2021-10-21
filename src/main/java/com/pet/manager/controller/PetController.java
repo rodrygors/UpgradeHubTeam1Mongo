@@ -28,45 +28,15 @@ public class PetController {
     @GetMapping("/pets/{id}")
     public PetResponse getPetById(@PathVariable(value = "id") String id) {
         Pet pet = petServ.findById(id);
-        List<FeedResponse> feedResponseList = new ArrayList<>();
-        if(!pet.getFeedList().isEmpty() && pet.getFeedList() != null){
-            for (Feed feed : pet.getFeedList()) {
-                feedResponseList.add(new FeedResponse(
-                        feed.getId(),
-                        feed.getFeedTme(),
-                        feed.getFoodType()
-                ));
-            }
-        }
-        return new PetResponse(
-                pet.getId(),
-                pet.getName(),
-                pet.getType(),
-                feedResponseList
-        );
+        return pet.createPetRequest();
     }
 
-    @GetMapping("/pets")
+    @GetMapping("/pets-by-type")
     public List<PetResponse> getPetByType(@RequestParam String type) {
         List<Pet> pets = petServ.findByType(type);
         List<PetResponse> petResponses = new ArrayList<>();
         for (Pet pet : pets) {
-            List<FeedResponse> feedResponseList = new ArrayList<>();
-            if(!pet.getFeedList().isEmpty() && pet.getFeedList() != null){
-                for (Feed feed : pet.getFeedList()) {
-                    feedResponseList.add(new FeedResponse(
-                            feed.getId(),
-                            feed.getFeedTme(),
-                            feed.getFoodType()
-                    ));
-                }
-            }
-            petResponses.add(new PetResponse(
-                    pet.getId(),
-                    pet.getName(),
-                    pet.getType(),
-                    feedResponseList
-            ));
+            petResponses.add(pet.createPetRequest());
         }
         return petResponses;
     }
@@ -74,42 +44,36 @@ public class PetController {
     @GetMapping("/pets")
     public List<PetResponse> getPets() {
         List<Pet> pets = petServ.findAll();
-        List<PetResponse> petResponses = new ArrayList<>();
+        List<PetResponse> petResponseList = new ArrayList<>();
         for (Pet pet : pets) {
-            List<FeedResponse> feedResponseList = new ArrayList<>();
-            if(!pet.getFeedList().isEmpty() && pet.getFeedList() != null){
-                for (Feed feed : pet.getFeedList()) {
-                    feedResponseList.add(new FeedResponse(
-                            feed.getId(),
-                            feed.getFeedTme(),
-                            feed.getFoodType()
-                    ));
-                }
-            }
-            petResponses.add(new PetResponse(
-                    pet.getId(),
-                    pet.getName(),
-                    pet.getType(),
-                    feedResponseList
-            ));
+            petResponseList.add(pet.createPetRequest());
         }
-        return petResponses;
+        return petResponseList;
     }
 
     @PostMapping("/pets")
-    public PetResponse addPet(@RequestBody @Valid PetRequest petRequest) {
+    public PetResponse addPet(@RequestBody() @Valid PetRequest petRequest) {
         Pet pet = petServ.addPet(Pet
                 .builder()
                 .name(petRequest.getName())
                 .type(petRequest.getType())
                 .build());
-        List<FeedResponse> feedResponseList = new ArrayList<>();
-        return new PetResponse(
-                pet.getId(),
-                pet.getName(),
-                pet.getType(),
-                new ArrayList<>()
-        );
+        return pet.createPetRequest();
     }
 
+    @PutMapping(value = "/pets/{id}")
+    public PetResponse updatePet(@RequestBody PetRequest petRequest, @PathVariable(value = "id") String id){
+        Pet pet = petServ.updatePet(
+                id,
+                petRequest.getName(),
+                petRequest.getType()
+                );
+
+        return pet.createPetRequest();
+    }
+
+    @DeleteMapping(value = "/pets/{id}")
+    public void deletePetById(@PathVariable(value = "id") String id){
+        petServ.deleteById(id);
+    }
 }

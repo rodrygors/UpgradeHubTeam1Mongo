@@ -50,4 +50,19 @@ public class PetService {
     public List<Pet> findByType(String type) {
         return petRepo.findByType(PetType.valueOf(type));
     }
+
+    public Pet updatePet(String id, String name, PetType type) {
+        Pet pet = this.findById(id);
+        pet.setName(name);
+        pet.setType(type);
+        return petRepo.save(pet);
+    }
+
+    public void deleteById(String id) {
+        petRepo.deleteById(id);
+    }
+
+//    public Feed updateFeedId(String petId, Feed newFeed) {
+//        return new Feed();
+//    }
 }

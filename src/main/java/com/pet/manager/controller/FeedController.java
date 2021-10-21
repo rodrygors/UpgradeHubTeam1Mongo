@@ -4,10 +4,15 @@ import com.pet.manager.controller.request.FeedRequest;
 import com.pet.manager.controller.response.FeedResponse;
 import com.pet.manager.controller.response.PetResponse;
 import com.pet.manager.model.Feed;
+import com.pet.manager.model.FoodType;
 import com.pet.manager.model.Pet;
 import com.pet.manager.service.PetService;
+import org.apache.tomcat.jni.Local;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,25 +25,13 @@ public class FeedController {
     }
 
     @PostMapping(value = "/feeds/pets/{id}")
-    public PetResponse addFeedToPet(@PathVariable(value = "id") String id, @RequestBody FeedRequest feedRequest){
+    public PetResponse addFeedToPet(@PathVariable(value = "id") String id, @RequestParam String time, @RequestParam FoodType food){
         Pet pet = petService.addFeedToPet(id, Feed.builder()
-                .feedTme(feedRequest.getFeedTime())
-                .foodType(feedRequest.getFoodType())
+                .feedTime(LocalTime.parse(time))
+                .foodType(food)
                 .build());
-        List<FeedResponse> feedResponseList = new ArrayList<>();
-        for(Feed feed : pet.getFeedList()){
-            feedResponseList.add(new FeedResponse(
-                    feed.getId(),
-                    feed.getFeedTme(),
-                    feed.getFoodType()
-            ));
-        }
-        return new PetResponse(
-                pet.getId(),
-                pet.getName(),
-                pet.getType(),
-                feedResponseList
-        );
+
+        return pet.createPetRequest();
     }
 
     @GetMapping(value = "/feeds/pets/{id}")
@@ -47,12 +40,19 @@ public class FeedController {
         List<FeedResponse> feedResponseList = new ArrayList<>();
 
         for(Feed feed : feedList){
-            feedResponseList.add(new FeedResponse(
-                    feed.getId(),
-                    feed.getFeedTme(),
-                    feed.getFoodType()
-            ));
+            feedResponseList.add(feed.createFeedResponse());
         }
         return feedResponseList;
     }
+//Can't search for Feed to update because i can't generate an id for Feed
+
+//    @PutMapping(value = "/feeds/pets/{id}")
+//    public FeedResponse updateFeed(@PathVariable(value = "id") String petId, @RequestParam String time, @RequestParam FoodType food){
+//        Feed feed = petService.updateFeedId(petId, Feed.builder()
+//                .feedTime(LocalTime.parse(time))
+//                .foodType(food)
+//                .build());
+//
+//        return feed.createFeedResponse();
+//    }
 }

@@ -4,6 +4,7 @@ import com.pet.manager.model.FoodType;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -12,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FeedResponse {
-    private String id;
-    private LocalDateTime feedTme;
+    private int id;
+    private LocalTime feedTime;
     private FoodType foodType;
 }
