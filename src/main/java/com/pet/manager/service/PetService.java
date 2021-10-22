@@ -1,12 +1,14 @@
 package com.pet.manager.service;
 
-import com.pet.manager.model.Feed;
-import com.pet.manager.model.PetType;
-import org.springframework.dao.DuplicateKeyException;
 import com.pet.manager.exception.DuplicatePetException;
+import com.pet.manager.exception.FeedNotFound;
 import com.pet.manager.exception.PetNotFound;
+import com.pet.manager.model.Feed;
 import com.pet.manager.model.Pet;
+import com.pet.manager.model.PetType;
 import com.pet.manager.repository.PetRepository;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -62,7 +64,31 @@ public class PetService {
         petRepo.deleteById(id);
     }
 
-//    public Feed updateFeedId(String petId, Feed newFeed) {
-//        return new Feed();
+    public Feed updateFeedId(String feedId, String petId, Feed newFeed) {
+        Pet pet = this.findById(petId);
+        for (Feed feed : pet.getFeedList()) {
+            if (feed.getId().equals(feedId)) {
+                feed.setFeedTime(newFeed.getFeedTime());
+                feed.setFoodType(newFeed.getFoodType());
+                petRepo.save(pet);
+                return feed;
+            }
+        }
+        throw new FeedNotFound();
+    }
+
+    public Pet getPetByName(String name) {
+        return petRepo.findPetByName(name).orElseThrow(PetNotFound::new);
+    }
+
+//    public Pair<String, Feed> findFeedById(String id) {
+//        Pet pet = petRepo.findByFeedId(id).orElseThrow(FeedNotFound::new);
+//        for (Feed feed : pet.getFeedList()) {
+//            if (feed.getId().equals(id)) {
+//                Pair<String, Feed> pair = new Pair<>(pet.getId(), feed);
+//                break;
+//            }
+//        }
+//        return pair;
 //    }
 }

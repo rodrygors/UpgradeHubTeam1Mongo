@@ -12,8 +12,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeedResponse {
+public class FeedResponseWithPetId {
     private String id;
     private LocalTime feedTime;
     private FoodType foodType;
+    private String petId;
 }

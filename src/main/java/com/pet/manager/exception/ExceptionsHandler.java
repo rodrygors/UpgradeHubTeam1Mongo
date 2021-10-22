@@ -10,6 +10,16 @@ import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class ExceptionsHandler {
+    @ExceptionHandler({FeedNotFound.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public HttpErrorResponse handleGenericException(FeedNotFound exception) {
+        return new HttpErrorResponse(
+                404,
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+    }
+
     @ExceptionHandler({PetNotFound.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public HttpErrorResponse handleGenericException(PetNotFound exception) {

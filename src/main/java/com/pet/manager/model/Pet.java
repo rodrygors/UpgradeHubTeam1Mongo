@@ -31,7 +31,7 @@ public class Pet {
     @JsonIgnore
     public PetResponse createPetRequest(){
         List<FeedResponse> feedResponseList = new ArrayList<>();
-        if(!this.feedList.isEmpty()){
+        if(this.feedList!=null && !this.feedList.isEmpty()){
             for(Feed feed: this.feedList){
                 feedResponseList.add(new FeedResponse(
                         feed.getId(),
@@ -40,6 +40,11 @@ public class Pet {
                 ));
             }
         }
-        return new PetResponse();
+        return new PetResponse(
+                this.getId(),
+                this.getName(),
+                this.getType(),
+                feedResponseList
+        );
     }
 }

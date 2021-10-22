@@ -41,6 +41,12 @@ public class PetController {
         return petResponses;
     }
 
+    @GetMapping("/pets-by-name")
+    public PetResponse getPetByName(@RequestParam String name){
+        Pet pet = petServ.getPetByName(name);
+        return pet.createPetRequest();
+    }
+
     @GetMapping("/pets")
     public List<PetResponse> getPets() {
         List<Pet> pets = petServ.findAll();
