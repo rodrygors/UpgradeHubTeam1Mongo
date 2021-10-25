@@ -26,7 +26,6 @@ public class PetService {
     }
 
     public Pet addPet(Pet pet) {
-
         try {
             return petRepo.save(pet);
         } catch (DuplicateKeyException e) {
@@ -77,8 +76,8 @@ public class PetService {
         throw new FeedNotFound();
     }
 
-    public Pet getPetByName(String name) {
-        return petRepo.findPetByName(name).orElseThrow(PetNotFound::new);
+    public List<Pet> getPetByName(String name) {
+        return petRepo.findPetByNameContaining(name);
     }
 
 //    public Pair<String, Feed> findFeedById(String id) {

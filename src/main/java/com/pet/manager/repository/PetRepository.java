@@ -16,5 +16,5 @@ public interface PetRepository extends MongoRepository<Pet, String> {
     @Query("{'feed.id' : ?0 }")
     Optional<Pet> findByFeedId(String feedId);
 
-    Optional<Pet> findPetByName(String name);
+    List<Pet> findPetByNameContaining(String name);
 }

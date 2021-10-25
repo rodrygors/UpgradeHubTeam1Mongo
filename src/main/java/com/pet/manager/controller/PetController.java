@@ -42,9 +42,13 @@ public class PetController {
     }
 
     @GetMapping("/pets-by-name")
-    public PetResponse getPetByName(@RequestParam String name){
-        Pet pet = petServ.getPetByName(name);
-        return pet.createPetRequest();
+    public List<PetResponse> getPetByName(@RequestParam String name){
+        List<Pet> pets = petServ.getPetByName(name);
+        List<PetResponse> petResponses = new ArrayList<>();
+        for (Pet pet : pets) {
+            petResponses.add(pet.createPetRequest());
+        }
+        return petResponses;
     }
 
     @GetMapping("/pets")

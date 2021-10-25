@@ -24,7 +24,7 @@ public class Pet {
     @NotBlank(message = "Name is mandatory")
     @Indexed(unique = true)
     private String name;
-    @Indexed(unique = false)
+    @Indexed
     private PetType type;
     private List<Feed> feedList = new ArrayList<>();
 
